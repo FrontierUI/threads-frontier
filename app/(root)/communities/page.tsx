@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import Searchbar from '@/components/shared/Searchbar';
 
 import { fetchUser } from '@/lib/actions/user.actions';
+import { fetchCommunities } from '@/lib/actions/community.actions';
 
 const Page = async ({
   searchParams,
@@ -15,6 +16,8 @@ const Page = async ({
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect('/onboarding');
+
+  const result = await fetchCommunities({});
 
   return (
     <>
