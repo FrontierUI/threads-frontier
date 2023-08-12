@@ -8,8 +8,13 @@
 # testing
 /coverage
 
+
 # next.js
 /.next/
+/out/
+
+# .vscode
+/ .vscode/
 /out/
 
 # production
