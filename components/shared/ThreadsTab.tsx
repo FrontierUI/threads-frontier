@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 
 import { fetchUserPosts } from '@/lib/actions/user.actions';
+import { fetchCommunityPosts } from '@/lib/actions/community.actions';
+
 import ThreadCard from '@/components/cards/ThreadCard';
 
 interface Result {
@@ -37,11 +39,15 @@ interface Props {
 }
 
 const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
-  let result = await fetchUserPosts(accountId);
+  let result: any;
 
-  if (!result) {
-    redirect('/');
+  if (accountType === 'Community') {
+    result = await fetchCommunityPosts(accountId);
+  } else {
+    result = await fetchUserPosts(accountId);
   }
+
+  if (!result) redirect('/');
 
   return (
     <section className="mt-9 flex flex-col gap-10">
@@ -54,7 +60,11 @@ const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
           content={thread.text}
           createdAt={thread.createdAt}
           comments={thread.children}
-          community={thread.community}
+          community={
+            accountType === 'Community'
+              ? { name: result.name, id: result.id, image: result.image }
+              : thread.community
+          }
           author={
             accountType === 'User'
               ? { name: result.name, image: result.image, id: result.id }
